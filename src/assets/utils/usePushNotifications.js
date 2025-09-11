@@ -1,7 +1,5 @@
  import { useState, useEffect } from "react";
 
-const PUBLIC_VAPID_KEY = "<YOUR_PUBLIC_VAPID_KEY>";
-
 export const usePushNotifications = () => {
   const [subscription, setSubscription] = useState(null);
   const [isSubscribed, setIsSubscribed] = useState(false);

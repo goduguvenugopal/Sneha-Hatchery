@@ -1,13 +1,17 @@
 import { useEffect, useState } from "react";
 import "./App.css";
-import { toast, ToastContainer, Zoom } from "react-toastify";
+import { ToastContainer, Zoom } from "react-toastify";
 import useRegisterServiceWorker from "./assets/utils/useRegisterServiceWorker";
+import { Routes } from "react-router-dom";
+import Navbar from "./assets/Layout/Navbar";
 
 function App() {
   useRegisterServiceWorker(); // Register service worker
 
   return (
     <>
+      <Navbar />
+      <Routes></Routes>
       <ToastContainer
         position="top-center"
         autoClose={5000}
@@ -22,13 +26,6 @@ function App() {
         theme="dark"
         transition={Zoom}
       />
-
-      <button
-        onClick={() => toast("hello venugopal")}
-        className="bg-blue-500 text-white p-2 rounded-2xl"
-      >
-        Toast
-      </button>
     </>
   );
 }
