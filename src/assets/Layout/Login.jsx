@@ -2,7 +2,7 @@ import React, { useContext, useState } from "react";
 import axios from "axios";
 import { EmployeeContext, EnvContext } from "../../App";
 
-export default function Login({ onSuccess }) {
+export default function Login() {
   const [employeeCode, setEmployeeCode] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -35,6 +35,7 @@ export default function Login({ onSuccess }) {
       // success response handling (adjust according to your API)
       if (res.data && res.data.success) {
         setToken(res.data.token);
+        sessionStorage.setItem("employeeToken", JSON.stringify(res.data.token));
       } else {
         setError(res.data?.message || "Login failed");
       }
@@ -80,6 +81,7 @@ export default function Login({ onSuccess }) {
               name="employeeCode"
               type="number"
               inputMode="numeric"
+              autoFocus
               autoComplete="on"
               value={employeeCode}
               onChange={(e) => setEmployeeCode(e.target.value)}

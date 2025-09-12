@@ -1,16 +1,8 @@
 import React, { useContext, useEffect, useState } from "react";
-import { BsFillBoxSeamFill } from "react-icons/bs";
-import { CgProfile } from "react-icons/cg";
-import {
-  FaBars,
-  FaDownload,
-  FaHome,
-  FaSearch,
-  FaShareSquare,
-} from "react-icons/fa";
-import { FaCartShopping } from "react-icons/fa6";
+import { FaBars, FaDownload, FaShareSquare } from "react-icons/fa";
+
 import { MdClose } from "react-icons/md";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { EmployeeContext } from "../../App";
 import InstallAppModal from "../components/InstallAppModal";
@@ -18,8 +10,9 @@ import InstallAppModal from "../components/InstallAppModal";
 const Navbar = () => {
   const [offcanvas, setOffcanvas] = useState(false);
   const [installApp, setInstallApp] = useState(false);
-  const { token } = useContext(EmployeeContext);
+  const { setToken } = useContext(EmployeeContext);
   const location = useLocation();
+  const navigate = useNavigate()
 
   // active page text Highlight function
   const isActive = (path) =>
@@ -55,7 +48,7 @@ const Navbar = () => {
   const shareApp = async () => {
     try {
       await navigator.share({
-        url: "https://www.madlymart.com",
+        url: "https://snehahatchery.vercel.app",
       });
     } catch (error) {
       console.error(error);
@@ -93,6 +86,26 @@ const Navbar = () => {
             >
               Administration
             </Link>
+            <div
+              onClick={() => {
+                const isOkay = confirm(
+                  "you will be logged out, are you sure ?"
+                );
+                if (isOkay) {
+                  sessionStorage.removeItem("employeeToken");
+                  setToken("");
+                  toast.success("logged out ");
+                  setOffcanvas(false);
+                  navigate("/")
+                }
+              }}
+              to="/login"
+              className={`text-[1.2rem] cursor-pointer flex items-center  w-fit   gap-[0.7rem]  hover:text-blue-600 ${isActive(
+                "/login"
+              )} `}
+            >
+              Log out
+            </div>
             {/* <Link
               to="/contact"
               className={`text-[1.2rem] flex items-center  w-fit gap-[0.9rem]  hover:text-blue-600 ${isActive(
@@ -111,17 +124,17 @@ const Navbar = () => {
             <div className="flex flex-wrap gap-3">
               <button
                 onClick={shareApp}
-                className="bg-blue-600 text-white flex items-center justify-center gap-2 font-semibold h-10 rounded-full w-[10rem]"
+                className="bg-blue-600 text-white flex items-center justify-center gap-2 font-semibold h-10 rounded-full w-[8rem]"
               >
                 <FaShareSquare className=" text-white" />
-                Share App
+                Share
               </button>
               <a
                 href="/MadlyMart.apk"
                 download="MadlyMart.apk"
                 className="text-[1.2rem] text-black h-10 hover:bg-yellow-600 bg-yellow-500 flex justify-center items-center gap-2 rounded-full w-fit  px-5"
               >
-                <FaDownload /> Download App
+                <FaDownload /> Download
               </a>
             </div>
           </section>
@@ -176,40 +189,35 @@ const Navbar = () => {
               Contact us{" "}
             </Link> */}
 
-          {token ? (
-            <div
-              onClick={() => {
-                localStorage.removeItem("token");
-                setToken("");
-                localStorage.removeItem("user");
+          <div
+            onClick={() => {
+              sessionStorage.removeItem("employeeToken");
+              setToken("");
+              toast.success("logged out ");
+              setOffcanvas(false);
+            }}
+            to="/login"
+            className={`text-[1.2rem] cursor-pointer flex items-center  w-fit   gap-[0.7rem]  hover:text-blue-600 ${isActive(
+              "/login"
+            )} `}
+          >
+            Log out
+          </div>
 
-                toast.success("logged out");
-                setOffcanvas(false);
-              }}
-              to="/login"
-              className={`text-[1.2rem] cursor-pointer flex items-center  w-fit   gap-[0.7rem]  hover:text-blue-600 ${isActive(
-                "/login"
-              )} `}
-            >
-              Log out
-            </div>
-          ) : (
-            ""
-          )}
           <div className="mt-3 flex flex-wrap gap-3">
             <button
               onClick={shareApp}
-              className="bg-blue-600 text-white flex items-center justify-center gap-2 font-semibold h-10 rounded-full w-[10rem]"
+              className="bg-blue-600 text-white flex items-center justify-center gap-2 font-semibold h-10 rounded-full w-[7rem]"
             >
               <FaShareSquare className=" text-white" />
-              Share App
+              Share
             </button>
             <a
               href="/MadlyMart.apk"
               download="MadlyMart.apk"
               className="text-[1.2rem] text-black h-10   hover:bg-yellow-600 bg-yellow-500 flex justify-center items-center gap-2 rounded-full w-fit  px-5"
             >
-              <FaDownload /> Download App
+              <FaDownload /> Download
             </a>
           </div>
           <MdClose
@@ -220,9 +228,7 @@ const Navbar = () => {
         </div>
       </div>
       {/* download app modal component  */}
-      {!installApp && (
-       <InstallAppModal setInstallApp={setInstallApp}/>
-      )}
+      {installApp && <InstallAppModal setInstallApp={setInstallApp} />}
     </>
   );
 };

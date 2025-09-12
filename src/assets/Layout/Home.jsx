@@ -1,6 +1,7 @@
 import React from "react";
+import { Loading } from "../components/Loading";
 
-const Home = () => {
+const Home = ({loader}) => {
   // Dummy data (replace with API call)
   const logs = [
     {
@@ -30,6 +31,16 @@ const Home = () => {
       employeeCode: 124,
     },
   ];
+
+  if (loader) {
+    return (
+      <>
+        <Loading />
+      </>
+    );
+  }
+
+
   return (
     <div className="pt-8 p-3">
       <h5 className="text-[1.2rem] lg:text-[1.3rem]   font-bold text-gray-700 text-center">

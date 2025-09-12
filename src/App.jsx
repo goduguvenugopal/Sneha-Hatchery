@@ -8,6 +8,8 @@ import Home from "./assets/Layout/Home";
 import Administration from "./assets/Layout/Administration";
 import Login from "./assets/Layout/Login";
 import axios from "axios";
+import { Loading } from "./assets/components/Loading";
+import PageNotFound from "./assets/components/PageNotFound";
 
 export const EnvContext = createContext();
 export const EmployeeContext = createContext();
@@ -17,7 +19,16 @@ function App() {
   const public_vapid_key = import.meta.env.VITE_PUBLIC_VAPID_KEY;
   const [token, setToken] = useState("");
   const [employeeData, setEmployeeData] = useState({});
+  const [loader, setLoader] = useState(true);
   useRegisterServiceWorker(); // Register service worker
+
+  useEffect(() => {
+    // retrieving sessionstorage data
+    const empToken = sessionStorage.getItem("employeeToken");
+    if (empToken) {
+      setToken(JSON.parse(empToken));
+    }
+  }, []);
 
   useEffect(() => {
     const fetchEmployeeData = async () => {
@@ -30,15 +41,15 @@ function App() {
         if (res.data.success) {
           setEmployeeData(res.data?.data);
           console.log(res.data.data);
-          
+          setLoader(false);
         }
       } catch (error) {
         console.error(error);
       }
     };
 
-    if(token){
-      fetchEmployeeData()
+    if (token) {
+      fetchEmployeeData();
     }
   }, [token]);
 
@@ -50,10 +61,15 @@ function App() {
         >
           {token && <Navbar />}
           <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/administration" element={<Administration />} />
-            <Route path="/" element={<Login />} />
-
+            {token ? (
+              <>
+                <Route path="/" element={<Home loader={loader} />} />
+                <Route path="/administration" element={<Administration />} />
+              </>
+            ) : (
+              <Route path="/" element={<Login />} />
+            )}
+            <Route path="*" element={<PageNotFound />} />
           </Routes>
           <ToastContainer
             position="top-center"
