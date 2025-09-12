@@ -1,16 +1,18 @@
- import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
+import { EmployeeContext, EnvContext } from "../../App";
 
 export const usePushNotifications = () => {
   const [subscription, setSubscription] = useState(null);
   const [isSubscribed, setIsSubscribed] = useState(false);
-
+  const { base_api_url, public_vapid_key } = useContext(EnvContext);
+  const { token, employeeData } = useContext(EmployeeContext);
 
   const subscribeUser = async () => {
     try {
       const reg = await navigator.serviceWorker.ready;
       const sub = await reg.pushManager.subscribe({
         userVisibleOnly: true,
-        applicationServerKey: urlBase64ToUint8Array(PUBLIC_VAPID_KEY),
+        applicationServerKey: urlBase64ToUint8Array(public_vapid_key),
       });
       setSubscription(sub);
       setIsSubscribed(true);
