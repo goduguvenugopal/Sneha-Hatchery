@@ -7,6 +7,7 @@ import Navbar from "./assets/Layout/Navbar";
 import Home from "./assets/Layout/Home";
 import Administration from "./assets/Layout/Administration";
 import Login from "./assets/Layout/Login";
+import axios from "axios";
 
 export const EnvContext = createContext();
 export const EmployeeContext = createContext();
@@ -18,15 +19,41 @@ function App() {
   const [employeeData, setEmployeeData] = useState({});
   useRegisterServiceWorker(); // Register service worker
 
+  useEffect(() => {
+    const fetchEmployeeData = async () => {
+      try {
+        const res = await axios.get(`${base_api_url}/api/get/single/employee`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        if (res.data.success) {
+          setEmployeeData(res.data?.data);
+          console.log(res.data.data);
+          
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    if(token){
+      fetchEmployeeData()
+    }
+  }, [token]);
+
   return (
     <>
       <EnvContext.Provider value={{ base_api_url, public_vapid_key }}>
-        <EmployeeContext.Provider value={{ token, setToken , employeeData , setEmployeeData}}>
-          <Navbar />
+        <EmployeeContext.Provider
+          value={{ token, setToken, employeeData, setEmployeeData }}
+        >
+          {token && <Navbar />}
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/administration" element={<Administration />} />
-            <Route path="/login" element={<Login />} />
+            <Route path="/" element={<Login />} />
+
           </Routes>
           <ToastContainer
             position="top-center"
