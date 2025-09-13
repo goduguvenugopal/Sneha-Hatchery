@@ -9,35 +9,14 @@ const Home = ({ loader }) => {
   const { base_api_url } = useContext(EnvContext);
   const { token, employeeData } = useContext(EmployeeContext);
   const [generatorLogs, setGeneratorLogs] = useState([]);
-
-  // start generator
-  const startGenerator = async () => {
-    try {
-      const res = await axios.post(
-        `${base_api_url}/api/generator/start`,
-        {
-          employeeCode: employeeData?.employeeCode,
-          generatorId: 1,
-          firstEmpName: employeeData?.employeeName,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      if (res.data.success) {
-        toast.success(res.data?.message);
-      }
-    } catch (error) {
-      console.error(error);
-      toast.error("Generator is not started Please try again");
-    }
-  };
+  const [areLogs, setAreLogs] = useState(false);
+  const [runningGen, setRunningGen] = useState({});
+  const [generatorId, setGeneratorId] = useState(1);
 
   // get generator logs
   const fetchGeneratorLogs = async () => {
     try {
+      setAreLogs(true);
       const res = await axios.get(`${base_api_url}/api/generator/logs`, {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -45,9 +24,12 @@ const Home = ({ loader }) => {
       });
       if (res.data.success) {
         setGeneratorLogs(res.data?.data);
+        setRunningGen(res.data?.data[0]);
       }
     } catch (error) {
       console.error(error);
+    } finally {
+      setAreLogs(false);
     }
   };
 
@@ -58,7 +40,64 @@ const Home = ({ loader }) => {
     }
   }, [token]);
 
-  
+  // start generator
+  const startGenerator = async () => {
+    if (runningGen?.status === "on") {
+      return toast.info(
+        `Please Stop the generator ${runningGen?.generatorId} first then start other generator`
+      );
+    }
+    try {
+      const res = await axios.post(
+        `${base_api_url}/api/generator/start`,
+        {
+          employeeCode: employeeData?.employeeCode,
+          generatorId,
+          firstEmpName: employeeData?.employeeName,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (res.data.success) {
+        toast.success(res.data?.message);
+        fetchGeneratorLogs();
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error("Generator is not started Please try again");
+    }
+  };
+
+  // stop generator
+  const stopGenerator = async () => {
+    if (runningGen?.status === "off") {
+      return toast.info(
+        `Generator ${runningGen?.generatorId} is laready stopped`
+      );
+    }
+    try {
+      const res = await axios.put(
+        `${base_api_url}/api/generator/stop/${runningGen._id}`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (res.data.success) {
+        toast.success(res.data?.message);
+        fetchGeneratorLogs();
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error("Generator is not stopped please try again");
+    }
+  };
+
   if (loader) {
     return (
       <>
@@ -74,37 +113,64 @@ const Home = ({ loader }) => {
       </h5>
 
       {/* here generator push buttons to show status green and red colors  */}
-      <div className="flex justify-center gap-8 mt-8">
+      <div className="flex justify-center gap-4 mt-8">
         {/* Start Button */}
         <button
           onClick={startGenerator}
-          className="w-20 h-20 rounded-full bg-green-500 text-white font-bold text-lg shadow-lg hover:bg-green-600 active:scale-95 transition"
+          className="w-20 h-20 rounded-full cursor-pointer bg-green-400 text-white font-bold text-lg shadow-lg hover:bg-green-600 active:scale-95 transition"
         >
           Start
         </button>
-
+        <div className="flex flex-col items-center justify-center ">
+          <h5 className="font-bold">GEN</h5>
+          <h5 className="font-bold text-[1.2rem]">{generatorId}</h5>
+        </div>
         {/* Stop Button */}
-        <button className="w-20 h-20 rounded-full bg-red-300 text-white font-bold text-lg shadow-lg hover:bg-red-600 active:scale-95 transition">
+        <button
+          onClick={stopGenerator}
+          className="w-20 h-20 rounded-full cursor-pointer bg-red-400 text-white font-bold text-lg shadow-lg hover:bg-red-600 active:scale-95 transition"
+        >
           Stop
         </button>
       </div>
 
       {/* Generator Status Buttons */}
       <div className="flex justify-center gap-3 mt-8">
-        <button className="px-4 py-2 rounded-lg bg-green-500 text-white font-medium shadow">
-          Generator 1 - ON
-        </button>
-        <button className="px-4 py-2 rounded-lg bg-red-500 text-white font-medium shadow">
-          Generator 2 - OFF
-        </button>
+        {/* generator 1 buttons  */}
+        {runningGen?.status === "on" && runningGen?.generatorId === 1 ? (
+          <button
+            onClick={() => setGeneratorId(1)}
+            className="px-4 py-2 cursor-pointer rounded-lg bg-green-500 text-white font-medium shadow"
+          >
+            Generator 1 - ON
+          </button>
+        ) : (
+          <button onClick={()=>setGeneratorId(1)} className="px-4 py-2 cursor-pointer rounded-lg bg-red-500 text-white font-medium shadow">
+            Generator 1 - OFF
+          </button>
+        )}
+
+        {/* generator 2 buttons  */}
+        {runningGen?.status === "on" && runningGen?.generatorId === 2 ? (
+          <button
+            onClick={() => setGeneratorId(2)}
+            className="px-4 py-2 cursor-pointer rounded-lg bg-green-500 text-white font-medium shadow"
+          >
+            Generator 2 - ON
+          </button>
+        ) : (
+          <button onClick={()=>setGeneratorId(2)} className="px-4 py-2 cursor-pointer rounded-lg bg-red-500 text-white font-medium shadow">
+            Generator 2 - OFF
+          </button>
+        )}
       </div>
 
       <h5 className="text-[1.2rem] lg:text-[1.3rem] my-5  font-bold text-gray-700 text-center">
-        Generator 1 Logs
+        Generator {generatorId} Logs
       </h5>
 
       {/* generator logs component  */}
-      <Generator generatorLogs={generatorLogs} />
+      <Generator generatorLogs={generatorLogs} areLogs={areLogs} />
     </div>
   );
 };
