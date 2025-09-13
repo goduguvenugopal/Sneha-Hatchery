@@ -30,6 +30,182 @@ const Home = ({loader}) => {
       secondEmpName: "",
       employeeCode: 124,
     },
+    {
+      logDate: "2025-09-12",
+      shift: "A",
+      empId: "EMP001",
+      onTime: "2025-09-12T08:00:00",
+      offTime: "2025-09-12T10:30:00",
+      duration: 150,
+      generatorId: 1,
+      status: "on",
+      fisrtEmpName: "Ravi",
+      secondEmpName: "Suresh",
+      employeeCode: 123,
+    },
+    {
+      logDate: "2025-09-12",
+      shift: "C",
+      empId: "EMP002",
+      onTime: "2025-09-12T22:00:00",
+      offTime: null,
+      duration: null,
+      generatorId: 2,
+      status: "off",
+      fisrtEmpName: "Anil",
+      secondEmpName: "",
+      employeeCode: 124,
+    },{
+      logDate: "2025-09-12",
+      shift: "A",
+      empId: "EMP001",
+      onTime: "2025-09-12T08:00:00",
+      offTime: "2025-09-12T10:30:00",
+      duration: 150,
+      generatorId: 1,
+      status: "on",
+      fisrtEmpName: "Ravi",
+      secondEmpName: "Suresh",
+      employeeCode: 123,
+    },
+    {
+      logDate: "2025-09-12",
+      shift: "C",
+      empId: "EMP002",
+      onTime: "2025-09-12T22:00:00",
+      offTime: null,
+      duration: null,
+      generatorId: 2,
+      status: "off",
+      fisrtEmpName: "Anil",
+      secondEmpName: "",
+      employeeCode: 124,
+    },{
+      logDate: "2025-09-12",
+      shift: "A",
+      empId: "EMP001",
+      onTime: "2025-09-12T08:00:00",
+      offTime: "2025-09-12T10:30:00",
+      duration: 150,
+      generatorId: 1,
+      status: "on",
+      fisrtEmpName: "Ravi",
+      secondEmpName: "Suresh",
+      employeeCode: 123,
+    },
+    {
+      logDate: "2025-09-12",
+      shift: "C",
+      empId: "EMP002",
+      onTime: "2025-09-12T22:00:00",
+      offTime: null,
+      duration: null,
+      generatorId: 2,
+      status: "off",
+      fisrtEmpName: "Anil",
+      secondEmpName: "",
+      employeeCode: 124,
+    },{
+      logDate: "2025-09-12",
+      shift: "A",
+      empId: "EMP001",
+      onTime: "2025-09-12T08:00:00",
+      offTime: "2025-09-12T10:30:00",
+      duration: 150,
+      generatorId: 1,
+      status: "on",
+      fisrtEmpName: "Ravi",
+      secondEmpName: "Suresh",
+      employeeCode: 123,
+    },
+    {
+      logDate: "2025-09-12",
+      shift: "C",
+      empId: "EMP002",
+      onTime: "2025-09-12T22:00:00",
+      offTime: null,
+      duration: null,
+      generatorId: 2,
+      status: "off",
+      fisrtEmpName: "Anil",
+      secondEmpName: "",
+      employeeCode: 124,
+    },{
+      logDate: "2025-09-12",
+      shift: "A",
+      empId: "EMP001",
+      onTime: "2025-09-12T08:00:00",
+      offTime: "2025-09-12T10:30:00",
+      duration: 150,
+      generatorId: 1,
+      status: "on",
+      fisrtEmpName: "Ravi",
+      secondEmpName: "Suresh",
+      employeeCode: 123,
+    },
+    {
+      logDate: "2025-09-12",
+      shift: "C",
+      empId: "EMP002",
+      onTime: "2025-09-12T22:00:00",
+      offTime: null,
+      duration: null,
+      generatorId: 2,
+      status: "off",
+      fisrtEmpName: "Anil",
+      secondEmpName: "",
+      employeeCode: 124,
+    },{
+      logDate: "2025-09-12",
+      shift: "A",
+      empId: "EMP001",
+      onTime: "2025-09-12T08:00:00",
+      offTime: "2025-09-12T10:30:00",
+      duration: 150,
+      generatorId: 1,
+      status: "on",
+      fisrtEmpName: "Ravi",
+      secondEmpName: "Suresh",
+      employeeCode: 123,
+    },
+    {
+      logDate: "2025-09-12",
+      shift: "C",
+      empId: "EMP002",
+      onTime: "2025-09-12T22:00:00",
+      offTime: null,
+      duration: null,
+      generatorId: 2,
+      status: "off",
+      fisrtEmpName: "Anil",
+      secondEmpName: "",
+      employeeCode: 124,
+    },{
+      logDate: "2025-09-12",
+      shift: "A",
+      empId: "EMP001",
+      onTime: "2025-09-12T08:00:00",
+      offTime: "2025-09-12T10:30:00",
+      duration: 150,
+      generatorId: 1,
+      status: "on",
+      fisrtEmpName: "Ravi",
+      secondEmpName: "Suresh",
+      employeeCode: 123,
+    },
+    {
+      logDate: "2025-09-12",
+      shift: "C",
+      empId: "EMP002",
+      onTime: "2025-09-12T22:00:00",
+      offTime: null,
+      duration: null,
+      generatorId: 2,
+      status: "off",
+      fisrtEmpName: "Anil",
+      secondEmpName: "",
+      employeeCode: 124,
+    },
   ];
 
   if (loader) {
@@ -44,11 +220,11 @@ const Home = ({loader}) => {
   return (
     <div className="pt-8 p-3">
       <h5 className="text-[1.2rem] lg:text-[1.3rem]   font-bold text-gray-700 text-center">
-        Generator Tracking Mangement
+        Generator Tracking Management
       </h5>
 
       {/* here generator push buttons to show status green and red colors  */}
-      <div className="flex justify-center gap-8 mt-10">
+      <div className="flex justify-center gap-8 mt-8">
         {/* Start Button */}
         <button className="w-20 h-20 rounded-full bg-green-500 text-white font-bold text-lg shadow-lg hover:bg-green-600 active:scale-95 transition">
           Start
@@ -61,7 +237,7 @@ const Home = ({loader}) => {
       </div>
 
       {/* Generator Status Buttons */}
-      <div className="flex justify-center gap-6 mt-10">
+      <div className="flex justify-center gap-3 mt-8">
         <button className="px-4 py-2 rounded-lg bg-green-500 text-white font-medium shadow">
           Generator 1 - ON
         </button>
@@ -70,12 +246,12 @@ const Home = ({loader}) => {
         </button>
       </div>
 
-      <h5 className="text-[1.2rem] lg:text-[1.3rem] mt-10  font-bold text-gray-700 text-center">
+      <h5 className="text-[1.2rem] lg:text-[1.3rem] my-5  font-bold text-gray-700 text-center">
         Generator 1 Logs
       </h5>
 
       {/* Logs Table */}
-      <div className="overflow-x-auto  text-nowrap">
+      <div className="overflow-x-auto overflow-y-auto h-[70vh] text-nowrap ">
         <table className="min-w-full border border-gray-300 bg-white shadow rounded-lg">
           <thead className="bg-gray-100 text-gray-700">
             <tr>
