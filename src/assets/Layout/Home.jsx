@@ -1,213 +1,64 @@
-import React from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Loading } from "../components/Loading";
+import axios from "axios";
+import { EmployeeContext, EnvContext } from "../../App";
+import { toast } from "react-toastify";
+import Generator from "./Generator";
 
-const Home = ({loader}) => {
-  // Dummy data (replace with API call)
-  const logs = [
-    {
-      logDate: "2025-09-12",
-      shift: "A",
-      empId: "EMP001",
-      onTime: "2025-09-12T08:00:00",
-      offTime: "2025-09-12T10:30:00",
-      duration: 150,
-      generatorId: 1,
-      status: "on",
-      fisrtEmpName: "Ravi",
-      secondEmpName: "Suresh",
-      employeeCode: 123,
-    },
-    {
-      logDate: "2025-09-12",
-      shift: "C",
-      empId: "EMP002",
-      onTime: "2025-09-12T22:00:00",
-      offTime: null,
-      duration: null,
-      generatorId: 2,
-      status: "off",
-      fisrtEmpName: "Anil",
-      secondEmpName: "",
-      employeeCode: 124,
-    },
-    {
-      logDate: "2025-09-12",
-      shift: "A",
-      empId: "EMP001",
-      onTime: "2025-09-12T08:00:00",
-      offTime: "2025-09-12T10:30:00",
-      duration: 150,
-      generatorId: 1,
-      status: "on",
-      fisrtEmpName: "Ravi",
-      secondEmpName: "Suresh",
-      employeeCode: 123,
-    },
-    {
-      logDate: "2025-09-12",
-      shift: "C",
-      empId: "EMP002",
-      onTime: "2025-09-12T22:00:00",
-      offTime: null,
-      duration: null,
-      generatorId: 2,
-      status: "off",
-      fisrtEmpName: "Anil",
-      secondEmpName: "",
-      employeeCode: 124,
-    },{
-      logDate: "2025-09-12",
-      shift: "A",
-      empId: "EMP001",
-      onTime: "2025-09-12T08:00:00",
-      offTime: "2025-09-12T10:30:00",
-      duration: 150,
-      generatorId: 1,
-      status: "on",
-      fisrtEmpName: "Ravi",
-      secondEmpName: "Suresh",
-      employeeCode: 123,
-    },
-    {
-      logDate: "2025-09-12",
-      shift: "C",
-      empId: "EMP002",
-      onTime: "2025-09-12T22:00:00",
-      offTime: null,
-      duration: null,
-      generatorId: 2,
-      status: "off",
-      fisrtEmpName: "Anil",
-      secondEmpName: "",
-      employeeCode: 124,
-    },{
-      logDate: "2025-09-12",
-      shift: "A",
-      empId: "EMP001",
-      onTime: "2025-09-12T08:00:00",
-      offTime: "2025-09-12T10:30:00",
-      duration: 150,
-      generatorId: 1,
-      status: "on",
-      fisrtEmpName: "Ravi",
-      secondEmpName: "Suresh",
-      employeeCode: 123,
-    },
-    {
-      logDate: "2025-09-12",
-      shift: "C",
-      empId: "EMP002",
-      onTime: "2025-09-12T22:00:00",
-      offTime: null,
-      duration: null,
-      generatorId: 2,
-      status: "off",
-      fisrtEmpName: "Anil",
-      secondEmpName: "",
-      employeeCode: 124,
-    },{
-      logDate: "2025-09-12",
-      shift: "A",
-      empId: "EMP001",
-      onTime: "2025-09-12T08:00:00",
-      offTime: "2025-09-12T10:30:00",
-      duration: 150,
-      generatorId: 1,
-      status: "on",
-      fisrtEmpName: "Ravi",
-      secondEmpName: "Suresh",
-      employeeCode: 123,
-    },
-    {
-      logDate: "2025-09-12",
-      shift: "C",
-      empId: "EMP002",
-      onTime: "2025-09-12T22:00:00",
-      offTime: null,
-      duration: null,
-      generatorId: 2,
-      status: "off",
-      fisrtEmpName: "Anil",
-      secondEmpName: "",
-      employeeCode: 124,
-    },{
-      logDate: "2025-09-12",
-      shift: "A",
-      empId: "EMP001",
-      onTime: "2025-09-12T08:00:00",
-      offTime: "2025-09-12T10:30:00",
-      duration: 150,
-      generatorId: 1,
-      status: "on",
-      fisrtEmpName: "Ravi",
-      secondEmpName: "Suresh",
-      employeeCode: 123,
-    },
-    {
-      logDate: "2025-09-12",
-      shift: "C",
-      empId: "EMP002",
-      onTime: "2025-09-12T22:00:00",
-      offTime: null,
-      duration: null,
-      generatorId: 2,
-      status: "off",
-      fisrtEmpName: "Anil",
-      secondEmpName: "",
-      employeeCode: 124,
-    },{
-      logDate: "2025-09-12",
-      shift: "A",
-      empId: "EMP001",
-      onTime: "2025-09-12T08:00:00",
-      offTime: "2025-09-12T10:30:00",
-      duration: 150,
-      generatorId: 1,
-      status: "on",
-      fisrtEmpName: "Ravi",
-      secondEmpName: "Suresh",
-      employeeCode: 123,
-    },
-    {
-      logDate: "2025-09-12",
-      shift: "C",
-      empId: "EMP002",
-      onTime: "2025-09-12T22:00:00",
-      offTime: null,
-      duration: null,
-      generatorId: 2,
-      status: "off",
-      fisrtEmpName: "Anil",
-      secondEmpName: "",
-      employeeCode: 124,
-    },{
-      logDate: "2025-09-12",
-      shift: "A",
-      empId: "EMP001",
-      onTime: "2025-09-12T08:00:00",
-      offTime: "2025-09-12T10:30:00",
-      duration: 150,
-      generatorId: 1,
-      status: "on",
-      fisrtEmpName: "Ravi",
-      secondEmpName: "Suresh",
-      employeeCode: 123,
-    },
-    {
-      logDate: "2025-09-12",
-      shift: "C",
-      empId: "EMP002",
-      onTime: "2025-09-12T22:00:00",
-      offTime: null,
-      duration: null,
-      generatorId: 2,
-      status: "off",
-      fisrtEmpName: "Anil",
-      secondEmpName: "",
-      employeeCode: 124,
-    },
-  ];
+const Home = ({ loader }) => {
+  const { base_api_url } = useContext(EnvContext);
+  const { token, employeeData } = useContext(EmployeeContext);
+  const [generatorLogs, setGeneratorLogs] = useState([]);
 
+  // start generator
+  const startGenerator = async () => {
+    try {
+      const res = await axios.post(
+        `${base_api_url}/api/generator/start`,
+        {
+          employeeCode: employeeData?.employeeCode,
+          generatorId: 1,
+          firstEmpName: employeeData?.employeeName,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (res.data.success) {
+        toast.success(res.data?.message);
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error("Generator is not started Please try again");
+    }
+  };
+
+  // get generator logs
+  const fetchGeneratorLogs = async () => {
+    try {
+      const res = await axios.get(`${base_api_url}/api/generator/logs`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (res.data.success) {
+        setGeneratorLogs(res.data?.data);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    // if token is available call function
+    if (token) {
+      fetchGeneratorLogs();
+    }
+  }, [token]);
+
+  
   if (loader) {
     return (
       <>
@@ -215,7 +66,6 @@ const Home = ({loader}) => {
       </>
     );
   }
-
 
   return (
     <div className="pt-8 p-3">
@@ -226,7 +76,10 @@ const Home = ({loader}) => {
       {/* here generator push buttons to show status green and red colors  */}
       <div className="flex justify-center gap-8 mt-8">
         {/* Start Button */}
-        <button className="w-20 h-20 rounded-full bg-green-500 text-white font-bold text-lg shadow-lg hover:bg-green-600 active:scale-95 transition">
+        <button
+          onClick={startGenerator}
+          className="w-20 h-20 rounded-full bg-green-500 text-white font-bold text-lg shadow-lg hover:bg-green-600 active:scale-95 transition"
+        >
           Start
         </button>
 
@@ -250,54 +103,8 @@ const Home = ({loader}) => {
         Generator 1 Logs
       </h5>
 
-      {/* Logs Table */}
-      <div className="overflow-x-auto overflow-y-auto h-[70vh] text-nowrap ">
-        <table className="min-w-full border border-gray-300 bg-white shadow rounded-lg">
-          <thead className="bg-gray-100 text-gray-700">
-            <tr>
-              <th className="px-4 py-2 border ">Log Date</th>
-              <th className="px-4 py-2 border">Shift</th>
-              <th className="px-4 py-2 border">On Time</th>
-              <th className="px-4 py-2 border">Off Time</th>
-              <th className="px-4 py-2 border">Duration</th>
-              <th className="px-4 py-2 border">Generator</th>
-              <th className="px-4 py-2 border">Status</th>
-              <th className="px-4 py-2 border">First Emp Name</th>
-              <th className="px-4 py-2 border">Second Emp Name</th>
-            </tr>
-          </thead>
-          <tbody className="text-gray-600">
-            {logs.map((log, index) => (
-              <tr key={index} className="text-center">
-                <td className="px-4 py-2 border">{log.logDate}</td>
-                <td className="px-4 py-2 border">{log.shift}</td>
-
-                <td className="px-4 py-2 border">
-                  {new Date(log.onTime).toLocaleTimeString()}
-                </td>
-                <td className="px-4 py-2 border">
-                  {log.offTime
-                    ? new Date(log.offTime).toLocaleTimeString()
-                    : "—"}
-                </td>
-                <td className="px-4 py-2 border">
-                  {log.duration !== null ? log.duration : "—"}
-                </td>
-                <td className="px-4 py-2 border">{log.generatorId}</td>
-                <td
-                  className={`px-4 py-2 border font-bold ${
-                    log.status === "on" ? "text-green-600" : "text-red-600"
-                  }`}
-                >
-                  {log.status.toUpperCase()}
-                </td>
-                <td className="px-4 py-2 border">{log.fisrtEmpName}</td>
-                <td className="px-4 py-2 border">{log.secondEmpName || "—"}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+      {/* generator logs component  */}
+      <Generator generatorLogs={generatorLogs} />
     </div>
   );
 };

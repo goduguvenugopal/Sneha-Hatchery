@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { EmployeeContext, EnvContext } from "../../App";
 
@@ -9,8 +9,15 @@ export default function Login() {
   const { base_api_url } = useContext(EnvContext);
   const { setToken } = useContext(EmployeeContext);
 
+  useEffect(() => {
+    const empCode = localStorage.getItem("empCode");
+    if (empCode) {
+      setEmployeeCode(JSON.parse(empCode));
+    }
+  }, []);
+
   const validate = () => {
-    if (!employeeCode && employeeCode !== 0) {
+    if (!employeeCode && employeeCode.trim() !== 0) {
       setError("Employee code is required");
       return false;
     }
@@ -36,6 +43,7 @@ export default function Login() {
       if (res.data && res.data.success) {
         setToken(res.data.token);
         sessionStorage.setItem("employeeToken", JSON.stringify(res.data.token));
+        localStorage.setItem("empCode", JSON.stringify(parseInt(employeeCode)));
       } else {
         setError(res.data?.message || "Login failed");
       }

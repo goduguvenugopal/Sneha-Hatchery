@@ -6,13 +6,19 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { EmployeeContext } from "../../App";
 import InstallAppModal from "../components/InstallAppModal";
+import { usePushNotifications } from "../utils/usePushNotifications";
 
 const Navbar = () => {
   const [offcanvas, setOffcanvas] = useState(false);
   const [installApp, setInstallApp] = useState(false);
   const { setToken } = useContext(EmployeeContext);
   const location = useLocation();
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+  const { subscribeUser } = usePushNotifications();
+
+  useEffect(() => {
+    subscribeUser();
+  }, [subscribeUser]); // runs once if subscribeUser is wrapped with useCallback([])
 
   // active page text Highlight function
   const isActive = (path) =>
@@ -86,6 +92,15 @@ const Navbar = () => {
             >
               Administration
             </Link>
+            <Link
+              onClick={() => setOffcanvas(false)}
+              to="/account"
+              className={`text-[1.2rem] flex items-center   hover:text-blue-600  gap-3  w-fit ${isActive(
+                "/account"
+              )}`}
+            >
+              Account
+            </Link>
             <div
               onClick={() => {
                 const isOkay = confirm(
@@ -96,7 +111,7 @@ const Navbar = () => {
                   setToken("");
                   toast.success("logged out ");
                   setOffcanvas(false);
-                  navigate("/")
+                  navigate("/");
                 }
               }}
               to="/login"
@@ -179,6 +194,15 @@ const Navbar = () => {
           >
             Administration
           </Link>
+          <Link
+            onClick={() => setOffcanvas(false)}
+            to="/account"
+            className={`text-[1.2rem] flex items-center  hover:text-blue-600  gap-3  w-fit ${isActive(
+              "/account"
+            )}`}
+          >
+            Account
+          </Link>
           {/* <Link
               to="/contact"
               className={`text-[1.2rem] flex items-center  w-fit gap-[0.9rem]  hover:text-blue-600 ${isActive(
@@ -191,10 +215,13 @@ const Navbar = () => {
 
           <div
             onClick={() => {
-              sessionStorage.removeItem("employeeToken");
-              setToken("");
-              toast.success("logged out ");
-              setOffcanvas(false);
+              const isOkay = confirm("you will be logged out, are you sure ?");
+              if (isOkay) {
+                sessionStorage.removeItem("employeeToken");
+                setToken("");
+                toast.success("logged out ");
+                setOffcanvas(false);
+              }
             }}
             to="/login"
             className={`text-[1.2rem] cursor-pointer flex items-center  w-fit   gap-[0.7rem]  hover:text-blue-600 ${isActive(
@@ -228,7 +255,7 @@ const Navbar = () => {
         </div>
       </div>
       {/* download app modal component  */}
-      {installApp && <InstallAppModal setInstallApp={setInstallApp} />}
+      {!installApp && <InstallAppModal setInstallApp={setInstallApp} />}
     </>
   );
 };

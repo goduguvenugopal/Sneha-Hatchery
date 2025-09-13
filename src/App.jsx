@@ -8,8 +8,8 @@ import Home from "./assets/Layout/Home";
 import Administration from "./assets/Layout/Administration";
 import Login from "./assets/Layout/Login";
 import axios from "axios";
-import { Loading } from "./assets/components/Loading";
 import PageNotFound from "./assets/components/PageNotFound";
+import Account from "./assets/Layout/Account"; 
 
 export const EnvContext = createContext();
 export const EmployeeContext = createContext();
@@ -21,6 +21,7 @@ function App() {
   const [employeeData, setEmployeeData] = useState({});
   const [loader, setLoader] = useState(true);
   useRegisterServiceWorker(); // Register service worker
+
 
   useEffect(() => {
     // retrieving sessionstorage data
@@ -40,7 +41,7 @@ function App() {
         });
         if (res.data.success) {
           setEmployeeData(res.data?.data);
-          console.log(res.data.data);
+         
           setLoader(false);
         }
       } catch (error) {
@@ -59,12 +60,13 @@ function App() {
         <EmployeeContext.Provider
           value={{ token, setToken, employeeData, setEmployeeData }}
         >
-          {token && <Navbar />}
+          {token && employeeData?.employeeName && <Navbar />}
           <Routes>
             {token ? (
               <>
                 <Route path="/" element={<Home loader={loader} />} />
                 <Route path="/administration" element={<Administration />} />
+                <Route path="/account" element={<Account />} />
               </>
             ) : (
               <Route path="/" element={<Login />} />
