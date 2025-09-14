@@ -10,6 +10,7 @@ import Login from "./assets/Layout/Login";
 import axios from "axios";
 import PageNotFound from "./assets/components/PageNotFound";
 import Account from "./assets/Layout/Account";
+import EmployeeForm from "./assets/components/EmployeeForm";
 
 export const EnvContext = createContext();
 export const EmployeeContext = createContext();
@@ -66,6 +67,7 @@ function App() {
                 <Route path="/" element={<Home loader={loader} />} />
                 <Route path="/administration" element={<Administration />} />
                 <Route path="/account" element={<Account />} />
+                <Route path="/employeeform" element={<EmployeeForm />} />
               </>
             ) : (
               <Route path="/" element={<Login />} />

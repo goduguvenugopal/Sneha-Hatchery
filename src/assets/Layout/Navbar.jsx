@@ -10,7 +10,7 @@ import { usePushNotifications } from "../utils/usePushNotifications";
 const Navbar = () => {
   const [offcanvas, setOffcanvas] = useState(false);
   const [installApp, setInstallApp] = useState(false);
-  const { setToken } = useContext(EmployeeContext);
+  const { setToken, employeeData } = useContext(EmployeeContext);
   const location = useLocation();
   const { subscribeUser } = usePushNotifications();
 
@@ -82,14 +82,17 @@ const Navbar = () => {
             >
               Home
             </Link>
-            <Link
-              to="/administration"
-              className={`text-[1.2rem] flex items-center  w-fit gap-[0.7rem]  hover:text-blue-600 ${isActive(
-                "/administration"
-              )}`}
-            >
-              Administration
-            </Link>
+            {/* checking designation  */}
+            {["incharge", "manager"].includes(employeeData?.designation) && (
+              <Link
+                to="/administration"
+                className={`text-[1.2rem] flex items-center  w-fit gap-[0.7rem]  hover:text-blue-600 ${isActive(
+                  "/administration"
+                )}`}
+              >
+                Administration
+              </Link>
+            )}
             <Link
               onClick={() => setOffcanvas(false)}
               to="/account"
@@ -99,7 +102,7 @@ const Navbar = () => {
             >
               Account
             </Link>
-           
+
             {/* <Link
               to="/contact"
               className={`text-[1.2rem] flex items-center  w-fit gap-[0.9rem]  hover:text-blue-600 ${isActive(
@@ -164,15 +167,18 @@ const Navbar = () => {
             Home
           </Link>
 
-          <Link
-            onClick={() => setOffcanvas(false)}
-            to="/administration"
-            className={`text-[1.2rem] flex lg:hidden items-center  w-fit gap-[0.7rem]  hover:text-blue-600 ${isActive(
-              "/administration"
-            )}`}
-          >
-            Administration
-          </Link>
+          {/* checking designation  */}
+          {["incharge", "manager"].includes(employeeData?.designation) && (
+            <Link
+              onClick={() => setOffcanvas(false)}
+              to="/administration"
+              className={`text-[1.2rem] flex lg:hidden items-center  w-fit gap-[0.7rem]  hover:text-blue-600 ${isActive(
+                "/administration"
+              )}`}
+            >
+              Administration
+            </Link>
+          )}
           <Link
             onClick={() => setOffcanvas(false)}
             to="/account"
@@ -191,8 +197,6 @@ const Navbar = () => {
               {" "}
               Contact us{" "}
             </Link> */}
-
-         
 
           <div className="mt-3 flex flex-wrap gap-3">
             <button
