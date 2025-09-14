@@ -78,13 +78,9 @@ export const usePushNotifications = () => {
   }, [employeeData?.employeeCode, token]);
 
   // turn off notification
-  const unsubscribeUser = async () => {
+  const unsubscribeUser = useCallback(async () => {
     try {
-      if (!subscription) {
-        toast.error("Notification is already in Off");
-        return;
-      }
-
+    
       const reg = await navigator.serviceWorker.ready;
       const existingSub = await reg.pushManager.getSubscription();
 
@@ -94,7 +90,7 @@ export const usePushNotifications = () => {
 
         if (isUnsubscribed) {
           // Remove subscription from server
-          const res = await axios.post(
+          const res = await axios.delete(
             `${base_api_url}/api/unsubscribe`,
             {
               employeeCode: employeeData?.employeeCode,
@@ -120,9 +116,9 @@ export const usePushNotifications = () => {
       console.error("Unsubscription failed:", err);
       toast.error("Please try again");
     }
-  };
+  },[employeeData?.employeeCode, token])
 
-  return { subscribeUser, unsubscribeUser, isSubscribed };
+  return { subscribeUser, unsubscribeUser, isSubscribed , subscription };
 };
 
 function urlBase64ToUint8Array(base64String) {

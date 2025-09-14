@@ -5,8 +5,8 @@ self.addEventListener("push", (event) => {
   const data = event.data.json(); // Extract payload sent from server
   const options = {
     body: data.body,                  // Notification body text
-    icon: data.icon || "/icons/icon-192x192.png", // Optional icon
-    badge: data.badge || "/icons/badge-72x72.png", // Optional badge
+    icon: data.icon || "/favicon.jpeg", // Optional icon
+    badge: data.badge || "/favicon.jpeg", // Optional badge
     data: data.url || "/",            // URL to open on click
   };
 

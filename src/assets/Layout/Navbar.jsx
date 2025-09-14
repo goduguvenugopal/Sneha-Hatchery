@@ -2,8 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { FaBars, FaDownload, FaShareSquare } from "react-icons/fa";
 
 import { MdClose } from "react-icons/md";
-import { Link, useLocation, useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
+import { Link, useLocation } from "react-router-dom";
 import { EmployeeContext } from "../../App";
 import InstallAppModal from "../components/InstallAppModal";
 import { usePushNotifications } from "../utils/usePushNotifications";
@@ -13,7 +12,6 @@ const Navbar = () => {
   const [installApp, setInstallApp] = useState(false);
   const { setToken } = useContext(EmployeeContext);
   const location = useLocation();
-  const navigate = useNavigate();
   const { subscribeUser } = usePushNotifications();
 
   useEffect(() => {
@@ -101,26 +99,7 @@ const Navbar = () => {
             >
               Account
             </Link>
-            <div
-              onClick={() => {
-                const isOkay = confirm(
-                  "you will be logged out, are you sure ?"
-                );
-                if (isOkay) {
-                  sessionStorage.removeItem("employeeToken");
-                  setToken("");
-                  toast.success("logged out ");
-                  setOffcanvas(false);
-                  navigate("/");
-                }
-              }}
-              to="/login"
-              className={`text-[1.2rem] cursor-pointer flex items-center  w-fit   gap-[0.7rem]  hover:text-blue-600 ${isActive(
-                "/login"
-              )} `}
-            >
-              Log out
-            </div>
+           
             {/* <Link
               to="/contact"
               className={`text-[1.2rem] flex items-center  w-fit gap-[0.9rem]  hover:text-blue-600 ${isActive(
@@ -145,8 +124,8 @@ const Navbar = () => {
                 Share
               </button>
               <a
-                href="/MadlyMart.apk"
-                download="MadlyMart.apk"
+                href="/SNEHA.apk"
+                download="SNEHA.apk"
                 className="text-[1.2rem] text-black h-10 hover:bg-yellow-600 bg-yellow-500 flex justify-center items-center gap-2 rounded-full w-fit  px-5"
               >
                 <FaDownload /> Download
@@ -213,23 +192,7 @@ const Navbar = () => {
               Contact us{" "}
             </Link> */}
 
-          <div
-            onClick={() => {
-              const isOkay = confirm("you will be logged out, are you sure ?");
-              if (isOkay) {
-                sessionStorage.removeItem("employeeToken");
-                setToken("");
-                toast.success("logged out ");
-                setOffcanvas(false);
-              }
-            }}
-            to="/login"
-            className={`text-[1.2rem] cursor-pointer flex items-center  w-fit   gap-[0.7rem]  hover:text-blue-600 ${isActive(
-              "/login"
-            )} `}
-          >
-            Log out
-          </div>
+         
 
           <div className="mt-3 flex flex-wrap gap-3">
             <button
@@ -240,8 +203,8 @@ const Navbar = () => {
               Share
             </button>
             <a
-              href="/MadlyMart.apk"
-              download="MadlyMart.apk"
+              href="/SNEHA.apk"
+              download="SNEHA.apk"
               className="text-[1.2rem] text-black h-10   hover:bg-yellow-600 bg-yellow-500 flex justify-center items-center gap-2 rounded-full w-fit  px-5"
             >
               <FaDownload /> Download

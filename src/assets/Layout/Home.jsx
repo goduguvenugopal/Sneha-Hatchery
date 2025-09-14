@@ -12,6 +12,8 @@ const Home = ({ loader }) => {
   const [areLogs, setAreLogs] = useState(false);
   const [runningGen, setRunningGen] = useState({});
   const [generatorId, setGeneratorId] = useState(1);
+  const [genStartLoad, setGenStartLoad] = useState(false);
+  const [genStopLoad, setGenStopLoad] = useState(false);
 
   // get generator logs
   const fetchGeneratorLogs = async () => {
@@ -48,6 +50,7 @@ const Home = ({ loader }) => {
       );
     }
     try {
+      setGenStartLoad(true);
       const res = await axios.post(
         `${base_api_url}/api/generator/start`,
         {
@@ -68,6 +71,8 @@ const Home = ({ loader }) => {
     } catch (error) {
       console.error(error);
       toast.error("Generator is not started Please try again");
+    } finally {
+      setGenStartLoad(false);
     }
   };
 
@@ -75,10 +80,11 @@ const Home = ({ loader }) => {
   const stopGenerator = async () => {
     if (runningGen?.status === "off") {
       return toast.info(
-        `Generator ${runningGen?.generatorId} is laready stopped`
+        `Generator ${runningGen?.generatorId} has already stopped`
       );
     }
     try {
+      setGenStopLoad(true);
       const res = await axios.put(
         `${base_api_url}/api/generator/stop/${runningGen._id}`,
         {},
@@ -95,6 +101,8 @@ const Home = ({ loader }) => {
     } catch (error) {
       console.error(error);
       toast.error("Generator is not stopped please try again");
+    } finally {
+      setGenStopLoad(false);
     }
   };
 
@@ -115,23 +123,40 @@ const Home = ({ loader }) => {
       {/* here generator push buttons to show status green and red colors  */}
       <div className="flex justify-center gap-4 mt-8">
         {/* Start Button */}
-        <button
-          onClick={startGenerator}
-          className="w-20 h-20 rounded-full cursor-pointer bg-green-400 text-white font-bold text-lg shadow-lg hover:bg-green-600 active:scale-95 transition"
-        >
-          Start
-        </button>
+        {genStartLoad ? (
+          <button className="w-20 h-20 rounded-full text-[0.9rem] cursor-pointer bg-green-500 text-white font-bold text-lg shadow-lg hover:bg-green-600 active:scale-95 transition">
+            Starting..
+          </button>
+        ) : (
+          <button
+            onClick={startGenerator}
+            className="w-20 h-20 rounded-full cursor-pointer bg-green-500 text-white font-bold text-lg shadow-lg hover:bg-green-600 active:scale-95 transition"
+          >
+            Start
+          </button>
+        )}
         <div className="flex flex-col items-center justify-center ">
           <h5 className="font-bold">GEN</h5>
           <h5 className="font-bold text-[1.2rem]">{generatorId}</h5>
         </div>
         {/* Stop Button */}
+
+        {genStopLoad ? 
+          <button
+        
+          className="w-20 h-20 text-[0.9rem] rounded-full cursor-pointer bg-red-500 text-white font-bold text-lg shadow-lg hover:bg-red-600 active:scale-95 transition"
+        >
+          Stopping..
+        </button>
+      : 
         <button
           onClick={stopGenerator}
-          className="w-20 h-20 rounded-full cursor-pointer bg-red-400 text-white font-bold text-lg shadow-lg hover:bg-red-600 active:scale-95 transition"
+          className="w-20 h-20 rounded-full cursor-pointer bg-red-500 text-white font-bold text-lg shadow-lg hover:bg-red-600 active:scale-95 transition"
         >
           Stop
         </button>
+      }
+      
       </div>
 
       {/* Generator Status Buttons */}
@@ -145,7 +170,10 @@ const Home = ({ loader }) => {
             Generator 1 - ON
           </button>
         ) : (
-          <button onClick={()=>setGeneratorId(1)} className="px-4 py-2 cursor-pointer rounded-lg bg-red-500 text-white font-medium shadow">
+          <button
+            onClick={() => setGeneratorId(1)}
+            className="px-4 py-2 cursor-pointer rounded-lg bg-red-500 text-white font-medium shadow"
+          >
             Generator 1 - OFF
           </button>
         )}
@@ -159,7 +187,10 @@ const Home = ({ loader }) => {
             Generator 2 - ON
           </button>
         ) : (
-          <button onClick={()=>setGeneratorId(2)} className="px-4 py-2 cursor-pointer rounded-lg bg-red-500 text-white font-medium shadow">
+          <button
+            onClick={() => setGeneratorId(2)}
+            className="px-4 py-2 cursor-pointer rounded-lg bg-red-500 text-white font-medium shadow"
+          >
             Generator 2 - OFF
           </button>
         )}
