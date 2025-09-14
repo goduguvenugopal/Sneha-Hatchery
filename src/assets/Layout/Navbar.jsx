@@ -218,7 +218,7 @@ const Navbar = () => {
         </div>
       </div>
       {/* download app modal component  */}
-      {installApp && <InstallAppModal setInstallApp={setInstallApp} />}
+      {!installApp && <InstallAppModal setInstallApp={setInstallApp} />}
     </>
   );
 };

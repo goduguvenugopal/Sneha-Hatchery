@@ -5,7 +5,7 @@ import { toast } from "react-toastify";
 
 export const usePushNotifications = () => {
   const [subscription, setSubscription] = useState(null);
-  const [isSubscribed, setIsSubscribed] = useState(false);
+  const [isSubscribed, setIsSubscribed] = useState(true);
   const { base_api_url, public_vapid_key } = useContext(EnvContext);
   const { token, employeeData } = useContext(EmployeeContext);
 
@@ -46,6 +46,7 @@ export const usePushNotifications = () => {
         // ✅ Already subscribed → just update state, no API call
         setSubscription(existingSub);
         setIsSubscribed(true);
+        localStorage.setItem("subscribe", JSON.stringify(true));
         return;
       }
 
@@ -69,6 +70,7 @@ export const usePushNotifications = () => {
 
       if (res) {
         setIsSubscribed(true);
+        localStorage.setItem("subscribe", JSON.stringify(true));
         toast.success("Notification Enabled");
       }
     } catch (err) {
@@ -80,7 +82,6 @@ export const usePushNotifications = () => {
   // turn off notification
   const unsubscribeUser = useCallback(async () => {
     try {
-    
       const reg = await navigator.serviceWorker.ready;
       const existingSub = await reg.pushManager.getSubscription();
 
@@ -90,22 +91,18 @@ export const usePushNotifications = () => {
 
         if (isUnsubscribed) {
           // Remove subscription from server
-          const res = await axios.delete(
-            `${base_api_url}/api/unsubscribe`,
-            {
-              employeeCode: employeeData?.employeeCode,
-              endpoint: existingSub.endpoint,
+          const res = await axios.delete(`${base_api_url}/api/unsubscribe`, {
+            data: { endpoint: existingSub.endpoint },
+            headers: {
+              Authorization: `Bearer ${token}`,
             },
-            {
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            }
-          );
+          });
 
           if (res) {
+            // ✅ clear local state too
             setIsSubscribed(false);
-            setSubscription(null); // ✅ clear local state too
+            setSubscription(null);
+            localStorage.setItem("subscribe", JSON.stringify(false));
             toast.success("Notifications disabled");
           }
         }
@@ -116,9 +113,9 @@ export const usePushNotifications = () => {
       console.error("Unsubscription failed:", err);
       toast.error("Please try again");
     }
-  },[employeeData?.employeeCode, token])
+  }, [token]);
 
-  return { subscribeUser, unsubscribeUser, isSubscribed , subscription };
+  return { subscribeUser, unsubscribeUser, isSubscribed, subscription };
 };
 
 function urlBase64ToUint8Array(base64String) {

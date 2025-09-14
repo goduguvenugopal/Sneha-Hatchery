@@ -42,7 +42,7 @@ export default function Login() {
       // success response handling (adjust according to your API)
       if (res.data && res.data.success) {
         setToken(res.data.token);
-        sessionStorage.setItem("employeeToken", JSON.stringify(res.data.token));
+         localStorage.setItem("employeeToken", JSON.stringify(res.data.token));
         localStorage.setItem("empCode", JSON.stringify(parseInt(employeeCode)));
       } else {
         setError(res.data?.message || "Login failed");

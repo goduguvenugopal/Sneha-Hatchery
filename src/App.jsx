@@ -9,7 +9,7 @@ import Administration from "./assets/Layout/Administration";
 import Login from "./assets/Layout/Login";
 import axios from "axios";
 import PageNotFound from "./assets/components/PageNotFound";
-import Account from "./assets/Layout/Account"; 
+import Account from "./assets/Layout/Account";
 
 export const EnvContext = createContext();
 export const EmployeeContext = createContext();
@@ -22,10 +22,9 @@ function App() {
   const [loader, setLoader] = useState(true);
   useRegisterServiceWorker(); // Register service worker
 
-
   useEffect(() => {
     // retrieving sessionstorage data
-    const empToken = sessionStorage.getItem("employeeToken");
+    const empToken = localStorage.getItem("employeeToken");
     if (empToken) {
       setToken(JSON.parse(empToken));
     }
@@ -41,7 +40,7 @@ function App() {
         });
         if (res.data.success) {
           setEmployeeData(res.data?.data);
-         
+
           setLoader(false);
         }
       } catch (error) {
