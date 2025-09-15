@@ -2,7 +2,6 @@ import axios from "axios";
 import React, { useContext, useState } from "react";
 import { toast } from "react-toastify";
 import { EmployeeContext, EnvContext } from "../../App";
- 
 
 const EmployeeForm = () => {
   const { token } = useContext(EmployeeContext);
@@ -117,16 +116,18 @@ const EmployeeForm = () => {
         </div>
 
         {/* Password */}
-        <div>
-          <label className="block text-sm font-medium">Password</label>
-          <input
-            type="number"
-            name="password"
-            value={formData.password}
-            onChange={handleChange}
-            className="w-full border rounded p-2  mt-2"
-          />
-        </div>
+        {["incharge", "manager"].includes(formData.designation) && (
+          <div>
+            <label className="block text-sm font-medium">Password</label>
+            <input
+              type="number"
+              name="password"
+              value={formData.password}
+              onChange={handleChange}
+              className="w-full border rounded p-2  mt-2"
+            />
+          </div>
+        )}
 
         {/* Address */}
         <div>
