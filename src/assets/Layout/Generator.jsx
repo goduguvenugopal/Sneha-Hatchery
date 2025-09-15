@@ -7,6 +7,7 @@ const Generator = ({ generatorLogs, areLogs, generatorId }) => {
   const [toDate, setToDate] = useState("");
   const [genLogs, setGenLogs] = useState([]);
   const tableRef = useRef(null);
+  const [totalRunningHours, setTotalRunningHours] = useState(0);
 
   useEffect(() => {
     setGenLogs(generatorLogs);
@@ -81,11 +82,25 @@ const Generator = ({ generatorLogs, areLogs, generatorId }) => {
     setTimeout(() => {
       newWin.focus();
       newWin.print();
-
       // Give more time before closing to avoid issues on mobile
       setTimeout(() => newWin.close(), 2000);
     }, 500);
   };
+
+  // calculating total running hours of generator
+  // calculating total running hours of generator
+  useEffect(() => {
+    if (!generatorLogs || generatorLogs.length === 0) {
+      setTotalRunningHours(0);
+      return;
+    }
+
+    const results = generatorLogs.reduce((acc, item) => {
+      return acc + (item.duration || 0); // handle null/undefined
+    }, 0);
+
+    setTotalRunningHours(results);
+  }, [generatorLogs]);
 
   if (areLogs) {
     return <CustomLoading customHeight={"h-[30vh]"} />;
@@ -94,12 +109,8 @@ const Generator = ({ generatorLogs, areLogs, generatorId }) => {
     <>
       {/* generatorLogs Table */}
       {genLogs.length > 0 ? (
-        <>
-          <div
-            id="printSection"
-            ref={tableRef}
-            className="overflow-x-auto overflow-y-auto max-h-[70vh] text-nowrap "
-          >
+        <div id="printSection" ref={tableRef}>
+          <div className="overflow-x-auto overflow-y-auto max-h-[70vh] text-nowrap ">
             <table className="min-w-full border border-gray-300 bg-white shadow rounded-lg">
               <thead className="bg-gray-100 text-gray-700">
                 <tr>
@@ -129,8 +140,15 @@ const Generator = ({ generatorLogs, areLogs, generatorId }) => {
                         : "—"}
                     </td>
                     <td className="px-4 py-2 border">
-                      {log.duration !== null ? log.duration : "—"}
+                      {log.duration !== null
+                        ? `${
+                            Math.floor(log.duration / 60) > 0
+                              ? Math.floor(log.duration / 60) + "h "
+                              : ""
+                          }${log.duration % 60}m`
+                        : "—"}
                     </td>
+
                     <td className="px-4 py-2 border">{log.generatorId}</td>
                     <td
                       className={`px-4 py-2 border font-bold ${
@@ -148,7 +166,17 @@ const Generator = ({ generatorLogs, areLogs, generatorId }) => {
               </tbody>
             </table>
           </div>
-        </>
+          {/* total running hours of generator  */}
+          <div className="my-3 py-3 text-center">
+            <h5 className="font-semibold text-gray-900 text-[1.1rem]">
+              Generator - {generatorId} Total Running Hours :{" "}
+              <span className="text-[1.2rem] font-bold text-black">
+                {Math.floor(totalRunningHours / 60)}h{" "}
+                {Math.floor(totalRunningHours % 60)}m
+              </span>
+            </h5>
+          </div>
+        </div>
       ) : (
         <div className="text-center text-[1rem] font-semibold h-[30vh] flex items-center justify-center">
           <h5>No Logs</h5>
@@ -156,7 +184,7 @@ const Generator = ({ generatorLogs, areLogs, generatorId }) => {
       )}
 
       {/* print table logs section  */}
-      <div className="mt-5 pt-5 text-center ">
+      <div className="mt-3 pt-3 text-center ">
         {/* Filters */}
         <div className="flex justify-center flex-wrap gap-4 mb-6 ">
           <div>
