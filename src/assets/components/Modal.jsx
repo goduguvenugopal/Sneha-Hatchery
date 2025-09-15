@@ -27,7 +27,7 @@ export const Modal = () => {
 
 export const InputModal = ({handleSubmit , password , setPassword, error}) =>{
   return (
-      <div className="h-screen flex items-center justify-center bg-gray-100">
+      <div className="h-[90vh] flex items-center justify-center bg-gray-100">
         <div className="bg-white p-6 rounded-2xl shadow-lg w-[320px]">
           <div className="flex justify-center text-4xl text-gray-700 mb-4">
             <FaLock />

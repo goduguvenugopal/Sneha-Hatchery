@@ -28,7 +28,7 @@ const Generator = ({ generatorLogs, areLogs }) => {
               {generatorLogs.map((log, index) => (
                 <tr key={index} className="text-center">
                   <td className="px-4 py-2 border">
-                    {new Date(log?.logDate).toDateString()}
+                    {log?.logDate}
                   </td>
                   <td className="px-4 py-2 border">{log.shift}</td>
 
