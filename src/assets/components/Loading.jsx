@@ -31,3 +31,13 @@ export const FlipkartSpin = () => {
     </div>
   );
 };
+
+export const SmallCardLoader = ({ title }) => {
+  return (
+    <div className="fixed w-full top-0 left-0 h-screen  flex justify-center items-center">
+      <div className="bg-gray-300 text-gray-800 shadow-lg w-fit p-5 rounded font-bold flex justify-center gap-2 items-center">
+        <SmallLoading /> {title}
+      </div>
+    </div>
+  );
+};

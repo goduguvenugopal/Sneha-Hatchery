@@ -4,6 +4,7 @@ import axios from "axios";
 import { EmployeeContext, EnvContext } from "../../App";
 import { toast } from "react-toastify";
 import Generator from "./Generator";
+import Footer from "./Footer";
 
 const Home = ({ loader }) => {
   const { base_api_url } = useContext(EnvContext);
@@ -115,6 +116,7 @@ const Home = ({ loader }) => {
   }
 
   return (
+    <>
     <div className="pt-8 p-3">
       <h5 className="text-[1.2rem] lg:text-[1.3rem]   font-bold text-gray-700 text-center">
         Generator Tracking Management
@@ -203,6 +205,9 @@ const Home = ({ loader }) => {
       {/* generator logs component  */}
       <Generator generatorLogs={generatorLogs} areLogs={areLogs} />
     </div>
+
+    <Footer/>
+    </>
   );
 };
 

@@ -3,17 +3,19 @@ import { FaEdit, FaTrash } from "react-icons/fa";
 import { EmployeeContext, EnvContext } from "../../App";
 import axios from "axios";
 import { Link } from "react-router-dom";
-import { CustomLoading } from "../components/Loading";
+import { CustomLoading, SmallCardLoader } from "../components/Loading";
+import { toast } from "react-toastify";
+import { InputModal } from "../components/Modal";
 
 const Administration = () => {
-  const { token } = useContext(EmployeeContext);
+  const { token, employeeData } = useContext(EmployeeContext);
   const { base_api_url } = useContext(EnvContext);
   const [employees, setEmployees] = useState([]);
   const [empLoader, setEmpLoader] = useState(true);
-
-  const handleDelete = (id) => {
-    setEmployees((prev) => prev.filter((emp) => emp.id !== id));
-  };
+  const [delSpin, setDelSpin] = useState(false);
+  const [permission, setPermission] = useState(false);
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
 
   // fetch all employees
   const fetchAllEmployees = async () => {
@@ -33,9 +35,68 @@ const Administration = () => {
     }
   };
 
+  // delete employee
+  const deleteEmployee = async (id) => {
+    const isOkay = confirm(
+      "Employee will be deleted permanently, are you sure ?"
+    );
+    if (!isOkay) return;
+    try {
+      setDelSpin(true);
+      const res = await axios.delete(
+        `${base_api_url}/api/delete/single/employee/${id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (res.data.success) {
+        setEmployees((prev) => prev.filter((emp) => emp._id !== id));
+        toast.success(res.data.message);
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error(error.data.message);
+    } finally {
+      setDelSpin(false);
+    }
+  };
+
   useEffect(() => {
     fetchAllEmployees();
   }, [token]);
+
+  // password checking to give access Administration page
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (employeeData?.password === parseInt(password)) {
+      setPermission(true);
+      sessionStorage.setItem("permission", JSON.stringify(true));
+      setError("");
+    } else {
+      setError("Incorrect password. Try again.");
+    }
+  };
+
+  useEffect(() => {
+    const isPermission = sessionStorage.getItem("permission");
+    if (isPermission) {
+      setPermission(JSON.parse(isPermission));
+    }
+  }, []);
+
+  if (!permission) {
+    return (
+      <InputModal
+        password={password}
+        handleSubmit={handleSubmit}
+        error={error}
+        setPassword={setPassword}
+      />
+    );
+  }
 
   return (
     <div className="pt-4 p-3">
@@ -75,11 +136,11 @@ const Administration = () => {
                         {emp.designation}
                       </h2>
                       <div className="flex gap-3">
-                        <button className="text-green-600 cursor-pointer hover:text-green-800">
+                        <button className="text-green-600  cursor-pointer hover:text-green-800">
                           <FaEdit size={18} />
                         </button>
                         <button
-                          onClick={() => handleDelete(emp._id)}
+                          onClick={() => deleteEmployee(emp._id)}
                           className="text-red-600 cursor-pointer hover:text-red-800"
                         >
                           <FaTrash size={18} />
@@ -113,6 +174,9 @@ const Administration = () => {
           )}
         </>
       )}
+
+      {/* delete employ loader  */}
+      {delSpin && <SmallCardLoader title={"Deleting.."} />}
     </div>
   );
 };

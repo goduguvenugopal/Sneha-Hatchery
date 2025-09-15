@@ -1,6 +1,6 @@
 import { createContext, useEffect, useState } from "react";
 import "./App.css";
-import { ToastContainer, Zoom } from "react-toastify";
+import { toast, ToastContainer, Zoom } from "react-toastify";
 import useRegisterServiceWorker from "./assets/utils/useRegisterServiceWorker";
 import { Route, Routes } from "react-router-dom";
 import Navbar from "./assets/Layout/Navbar";
@@ -46,6 +46,10 @@ function App() {
         }
       } catch (error) {
         console.error(error);
+        if (error.status === 404) {
+          setToken("");
+          toast.error(error.data?.response?.message);
+        }
       }
     };
 

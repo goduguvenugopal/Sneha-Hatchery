@@ -96,6 +96,7 @@ const EmployeeForm = () => {
             className="w-full border rounded p-2 mt-2"
           >
             <option value="">Select</option>
+            <option value="worker">Worker</option>
             <option value="supervisor">Supervisor</option>
             <option value="incharge">Incharge</option>
             <option value="manager">Manager</option>
