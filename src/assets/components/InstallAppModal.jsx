@@ -7,7 +7,7 @@ const InstallAppModal = ({ setInstallApp }) => {
   const shareApp = async () => {
     try {
       await navigator.share({
-        url: "https://www.madlymart.com",
+        url: "https://snehahatchery.vercel.app",
       });
     } catch (error) {
       console.error(error);
