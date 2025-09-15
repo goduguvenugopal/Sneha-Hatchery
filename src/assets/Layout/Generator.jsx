@@ -76,10 +76,13 @@ const Generator = ({ generatorLogs, areLogs, generatorId }) => {
         </body>
       </html>
     `);
+
     newWin.document.close();
-    newWin.focus();
-    newWin.print();
-    newWin.close();
+    setTimeout(() => {
+      newWin.focus();
+      newWin.print();
+      newWin.close();
+    }, 500);
   };
 
   if (areLogs) {
@@ -90,7 +93,8 @@ const Generator = ({ generatorLogs, areLogs, generatorId }) => {
       {/* generatorLogs Table */}
       {genLogs.length > 0 ? (
         <>
-          <div
+          <div 
+          id="printSection"
             ref={tableRef}
             className="overflow-x-auto overflow-y-auto max-h-[70vh] text-nowrap "
           >
