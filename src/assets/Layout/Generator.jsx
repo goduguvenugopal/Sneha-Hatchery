@@ -81,7 +81,9 @@ const Generator = ({ generatorLogs, areLogs, generatorId }) => {
     setTimeout(() => {
       newWin.focus();
       newWin.print();
-      newWin.close();
+
+      // Give more time before closing to avoid issues on mobile
+      setTimeout(() => newWin.close(), 2000);
     }, 500);
   };
 
@@ -93,8 +95,8 @@ const Generator = ({ generatorLogs, areLogs, generatorId }) => {
       {/* generatorLogs Table */}
       {genLogs.length > 0 ? (
         <>
-          <div 
-          id="printSection"
+          <div
+            id="printSection"
             ref={tableRef}
             className="overflow-x-auto overflow-y-auto max-h-[70vh] text-nowrap "
           >
