@@ -90,17 +90,17 @@ const Generator = ({ generatorLogs, areLogs, generatorId }) => {
   // calculating total running hours of generator
   // calculating total running hours of generator
   useEffect(() => {
-    if (!generatorLogs || generatorLogs.length === 0) {
+    if (!genLogs || genLogs.length === 0) {
       setTotalRunningHours(0);
       return;
     }
 
-    const results = generatorLogs.reduce((acc, item) => {
+    const results = genLogs.reduce((acc, item) => {
       return acc + (item.duration || 0); // handle null/undefined
     }, 0);
 
     setTotalRunningHours(results);
-  }, [generatorLogs]);
+  }, [genLogs]);
 
   if (areLogs) {
     return <CustomLoading customHeight={"h-[30vh]"} />;
@@ -232,12 +232,22 @@ const Generator = ({ generatorLogs, areLogs, generatorId }) => {
         </div>
 
         {/* print button  */}
+        <section className="flex justify-center">
         <button
           onClick={handlePrint}
-          className="bg-gray-800 cursor-pointer hover:bg-gray-900 text-white font-medium py-2 px-5 rounded-lg transition"
-        >
+          className="bg-gray-800 cursor-pointer hidden lg:block hover:bg-gray-900 text-white font-medium py-2 px-5 rounded-lg transition"
+          >
           Print Logs
         </button>
+        <button
+          onClick={() => {
+            window.print();
+          }}
+          className="bg-gray-800 cursor-pointer lg:hidden hover:bg-gray-900 text-white font-medium py-2 px-5 rounded-lg transition"
+          >
+          Print Logs
+        </button>
+          </section>
       </div>
     </>
   );
