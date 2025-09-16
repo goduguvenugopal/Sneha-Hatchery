@@ -8,7 +8,7 @@ const Generator = ({ generatorLogs, areLogs, generatorId, runningGen }) => {
   const [genLogs, setGenLogs] = useState([]);
   const tableRef = useRef(null);
   const [totalRunningHours, setTotalRunningHours] = useState(0);
-  const [liveRunTime, setLiveRunTime] = useState(null);
+  const [liveRunTime, setLiveRunTime] = useState(0);
 
   useEffect(() => {
     setGenLogs(generatorLogs);
@@ -112,13 +112,12 @@ const Generator = ({ generatorLogs, areLogs, generatorId, runningGen }) => {
         const hours = Math.floor(liveMin / 60);
         const minutes = Math.floor(liveMin % 60);
         setLiveRunTime(`${hours}h ${minutes}m`);
-      }, 1000);
+      }, 10000);
 
       return () => clearInterval(interval);
     }
   }, [runningGen]);
 
-  console.log(liveRunTime);
 
   // if logs are then render otherwise loader shows
   if (areLogs) {
@@ -149,16 +148,19 @@ const Generator = ({ generatorLogs, areLogs, generatorId, runningGen }) => {
                   <tr key={index} className="text-center">
                     <td className="px-4 py-2 border">{log?.logDate}</td>
                     <td className="px-4 py-2 border">{log.shift}</td>
-
+                    {/* on time  */}
                     <td className="px-4 py-2 border">
                       {new Date(log.onTime).toLocaleTimeString()}
                     </td>
+                    {/* off time  */}
                     <td className="px-4 py-2 border">
                       {log.offTime
                         ? new Date(log.offTime).toLocaleTimeString()
                         : "—"}
                     </td>
-                    {log.duration ? (
+
+                    {/* duration  */}
+                    {log.duration >= 0 || log.duration  ? (
                       <td className="px-4 py-2 border">
                         {log.duration !== null
                           ? `${
@@ -171,8 +173,9 @@ const Generator = ({ generatorLogs, areLogs, generatorId, runningGen }) => {
                     ) : (
                       <td className="px-4 py-2 border">{liveRunTime}</td>
                     )}
-
+                    {/* generator id  */}
                     <td className="px-4 py-2 border">{log.generatorId}</td>
+                    {/* generator status  */}
                     <td
                       className={`px-4 py-2 border font-bold ${
                         log.status === "on" ? "text-green-600" : "text-red-600"
