@@ -1,15 +1,29 @@
 ⚡ Generator Logs Management System
 
-A full-stack web application for tracking generator usage and managing employees. Employees can log generator runtime, while managers and incharges have access to administration features like employee management and system monitoring. The system also provides real-time runtime tracking, printable reports, and automated alerts via cron jobs.
+A full-stack Progressive Web Application (PWA) for tracking generator usage and managing employees.
+Employees can log generator runtime, while managers and incharges have access to administration features like employee management and system monitoring.
+The system provides:
+
+Real-time runtime tracking
+
+Printable reports
+
+Automated alerts (via cron jobs + web push)
+
+Installable PWA experience for mobile & desktop
 
 📌 Features
 👷 Employee Features
 
 Start and stop generator logging.
 
-View own logs in a tabular format.
+View personal logs in a tabular format.
 
-Receive cron job alerts every 10 minutes with total running duration.
+Live runtime counter → updates every second when generator is running.
+
+Receive Web Push Notifications every 10 minutes with total running duration.
+
+Install the app as a PWA and get alerts even when the browser is closed.
 
 🧑‍💼 Incharge & Manager Features
 
@@ -21,23 +35,35 @@ Monitor generator logs across all employees.
 
 Calculate and view total running hours.
 
-Generate printable reports for audits.
+Generate and print reports for audits.
 
 ⏱ Generator Runtime Tracking
 
-Live runtime counter → updates every second when generator is running.
-
-Logs include onTime, offTime, and duration (minutes → hours & minutes).
+Logs include onTime, offTime, duration (minutes → hours & minutes).
 
 Auto-calculated total running hours from all logs.
 
+Duration formatting (e.g., 2h 15m).
+
 🔔 Cron Jobs & Alerts
 
-Cron job runs every 10 minutes.
+node-cron runs every 10 minutes.
 
-Automatically sends runtime duration alerts to all employees.
+Triggers Web Push Notifications to all subscribed employees.
 
-Keeps team informed about generator performance without manual checks.
+Example push: "Generator running for 2h 30m"
+
+📲 Web Push + PWA
+
+Service Worker registered in frontend.
+
+Subscribes users with VAPID keys.
+
+Notifications sent via backend using web-push.
+
+Works offline (cached assets).
+
+Employees can install app on mobile/desktop home screen for quick access.
 
 ⚙️ Tech Stack
 🔹 Frontend
@@ -48,35 +74,32 @@ React Router DOM
 
 Axios (API communication)
 
+PWA (Service Worker + Manifest) for installability
+
+Web Push Notifications integrated
+
 🔹 Backend
 
 Node.js & Express.js
 
 MongoDB (Mongoose ODM)
 
-node-cron for automated alerts
+node-cron for automated duration alerts
 
-Role-based Access Control (RBAC) for employees, incharge, and manager
+web-push for sending push notifications
 
+Role-based Access Control (RBAC):
+
+Employee → operate generator
+
+Incharge → limited admin
+
+Manager → full admin access
 
 🚀 Deployment
 
-Frontend: Vercel
+Frontend → Vercel (optimized React + Vite build, PWA support)
 
-Backend: Railway 
+Backend → Railway (auto-deployment & scaling)
 
-Database: MongoDB Atlas
-
-
-# React + Vite
-
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
-
-Currently, two official plugins are available:
-
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+Database → MongoDB Atlas (cloud hosted)
