@@ -2,12 +2,13 @@ import React, { useEffect, useRef, useState } from "react";
 import { CustomLoading } from "../components/Loading";
 import { toast } from "react-toastify";
 
-const Generator = ({ generatorLogs, areLogs, generatorId }) => {
+const Generator = ({ generatorLogs, areLogs, generatorId, runningGen }) => {
   const [fromDate, setFromDate] = useState("");
   const [toDate, setToDate] = useState("");
   const [genLogs, setGenLogs] = useState([]);
   const tableRef = useRef(null);
   const [totalRunningHours, setTotalRunningHours] = useState(0);
+  const [liveRunTime, setLiveRunTime] = useState(null);
 
   useEffect(() => {
     setGenLogs(generatorLogs);
@@ -102,6 +103,24 @@ const Generator = ({ generatorLogs, areLogs, generatorId }) => {
     setTotalRunningHours(results);
   }, [genLogs]);
 
+  // gennerator live runtime
+  useEffect(() => {
+    if (runningGen?.status === "on") {
+      const interval = setInterval(() => {
+        const onTime = new Date(runningGen.onTime);
+        const liveMin = (Date.now() - onTime.getTime()) / 60000;
+        const hours = Math.floor(liveMin / 60);
+        const minutes = Math.floor(liveMin % 60);
+        setLiveRunTime(`${hours}h ${minutes}m`);
+      }, 1000);
+
+      return () => clearInterval(interval);
+    }
+  }, [runningGen]);
+
+  console.log(liveRunTime);
+
+  // if logs are then render otherwise loader shows
   if (areLogs) {
     return <CustomLoading customHeight={"h-[30vh]"} />;
   }
@@ -139,15 +158,19 @@ const Generator = ({ generatorLogs, areLogs, generatorId }) => {
                         ? new Date(log.offTime).toLocaleTimeString()
                         : "—"}
                     </td>
-                    <td className="px-4 py-2 border">
-                      {log.duration !== null
-                        ? `${
-                            Math.floor(log.duration / 60) > 0
-                              ? Math.floor(log.duration / 60) + "h "
-                              : ""
-                          }${log.duration % 60}m`
-                        : "—"}
-                    </td>
+                    {log.duration ? (
+                      <td className="px-4 py-2 border">
+                        {log.duration !== null
+                          ? `${
+                              Math.floor(log.duration / 60) > 0
+                                ? Math.floor(log.duration / 60) + "h "
+                                : ""
+                            }${log.duration % 60}m`
+                          : "-"}
+                      </td>
+                    ) : (
+                      <td className="px-4 py-2 border">{liveRunTime}</td>
+                    )}
 
                     <td className="px-4 py-2 border">{log.generatorId}</td>
                     <td
@@ -233,21 +256,21 @@ const Generator = ({ generatorLogs, areLogs, generatorId }) => {
 
         {/* print button  */}
         <section className="flex justify-center">
-        <button
-          onClick={handlePrint}
-          className="bg-gray-800 cursor-pointer hidden lg:block hover:bg-gray-900 text-white font-medium py-2 px-5 rounded-lg transition"
+          <button
+            onClick={handlePrint}
+            className="bg-gray-800 cursor-pointer hidden lg:block hover:bg-gray-900 text-white font-medium py-2 px-5 rounded-lg transition"
           >
-          Print Logs
-        </button>
-        <button
-          onClick={() => {
-            window.print();
-          }}
-          className="bg-gray-800 cursor-pointer lg:hidden hover:bg-gray-900 text-white font-medium py-2 px-5 rounded-lg transition"
+            Print Logs
+          </button>
+          <button
+            onClick={() => {
+              window.print();
+            }}
+            className="bg-gray-800 cursor-pointer lg:hidden hover:bg-gray-900 text-white font-medium py-2 px-5 rounded-lg transition"
           >
-          Print Logs
-        </button>
-          </section>
+            Print Logs
+          </button>
+        </section>
       </div>
     </>
   );

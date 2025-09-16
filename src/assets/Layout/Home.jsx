@@ -217,6 +217,7 @@ const Home = ({ loader }) => {
           generatorLogs={generatorLogs}
           areLogs={areLogs}
           generatorId={generatorId}
+          runningGen={runningGen}
         />
       </div>
 

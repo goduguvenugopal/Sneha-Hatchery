@@ -71,7 +71,9 @@ function App() {
                 <Route path="/" element={<Home loader={loader} />} />
                 <Route path="/administration" element={<Administration />} />
                 <Route path="/account" element={<Account />} />
-                <Route path="/employeeform" element={<EmployeeForm />} />
+                <Route path="/administration/registeremployee" element={<EmployeeForm />} />
+                <Route path="/administration/updateemployee/:id" element={<EmployeeForm />} />
+             
               </>
             ) : (
               <Route path="/" element={<Login />} />

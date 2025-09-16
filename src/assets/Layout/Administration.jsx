@@ -107,7 +107,7 @@ const Administration = () => {
         <hr className="border-gray-400 my-4" />
         {/* Header */}
         <Link
-          to="/employeeform"
+          to="/administration/registeremployee"
           className="bg-blue-600 cursor-pointer  text-white px-4 py-2 rounded-lg shadow hover:bg-blue-700"
         >
           Register Employee
@@ -136,9 +136,9 @@ const Administration = () => {
                         {emp.designation}
                       </h2>
                       <div className="flex gap-3">
-                        <button className="text-green-600  cursor-pointer hover:text-green-800">
+                        <Link to={`/administration/updateemployee/${emp._id}`} className="text-green-600  cursor-pointer hover:text-green-800">
                           <FaEdit size={18} />
-                        </button>
+                        </Link>
                         <button
                           onClick={() => deleteEmployee(emp._id)}
                           className="text-red-600 cursor-pointer hover:text-red-800"

@@ -5,15 +5,15 @@ body::-webkit-scrollbar {
   body * {
     visibility: hidden;
   }
-  #printSection, #printSection * {
+  #printSection,
+  #printSection * {
     visibility: visible;
   }
   #printSection {
     position: absolute;
     left: 0;
     top: 0;
-  }
-  #printTitle, #printTitle *{
-     visibility: visible;
+    max-height: none !important; /* override */
+    overflow: visible !important; /* show full table */
   }
 }

@@ -1,11 +1,16 @@
 import axios from "axios";
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { EmployeeContext, EnvContext } from "../../App";
+import { useNavigate, useParams } from "react-router-dom";
+import { Loading } from "./Loading";
 
 const EmployeeForm = () => {
   const { token } = useContext(EmployeeContext);
   const { base_api_url } = useContext(EnvContext);
+  const { id } = useParams(null);
+  const navigate = useNavigate();
+  const [getEmpSpinner, setGetEmpSpinner] = useState(id ? true : false);
   const [formData, setFormData] = useState({
     employeeName: "",
     employeeCode: "",
@@ -54,10 +59,73 @@ const EmployeeForm = () => {
     }
   };
 
+  // fetch Employee details
+  useEffect(() => {
+    const fetchSingleEmp = async () => {
+      try {
+        const res = await axios.get(
+          `${base_api_url}/api/get/single/employee/by/${id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        if (res.data) {
+          setFormData(res.data);
+        }
+      } catch (error) {
+        console.error(error);
+        toast.error("Please try again");
+      } finally {
+        setGetEmpSpinner(false);
+      }
+    };
+
+    if (id) {
+      fetchSingleEmp();
+    }
+  }, [id]);
+
+  // update handle function
+  const updateEmpHandle = async (e) => {
+    e.preventDefault();
+    try {
+      setLoader(true);
+
+      const res = await axios.put(
+        `${base_api_url}/api/update/single/employee/${id}`,
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (res.data.success) {
+        toast.success(res.data.message);
+        navigate("/administration");
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error("Please try again");
+    } finally {
+      setLoader(false);
+    }
+  };
+
+  if (getEmpSpinner) {
+    return <Loading />;
+  }
   return (
     <div className="max-w-md mx-auto p-6 bg-white shadow-md rounded-lg">
-      <h2 className="text-2xl font-semibold mb-4">Add Employee</h2>
-      <form onSubmit={handleSubmit} className="space-y-4">
+      <h2 className="text-2xl font-semibold mb-4">
+        {id ? "Update Employee" : "Add Employee"}
+      </h2>
+      <form
+        onSubmit={id ? updateEmpHandle : handleSubmit}
+        className="space-y-4"
+      >
         {/* Employee Name */}
         <div>
           <label className="block text-sm font-medium">Employee Name</label>
@@ -139,20 +207,43 @@ const EmployeeForm = () => {
             className="w-full border rounded p-2  mt-2"
           />
         </div>
-        {loader ? (
-          <button
-            type="button"
-            className="w-full bg-blue-600 pointer-events-none text-white py-2 rounded hover:bg-blue-700"
-          >
-            Submitting...
-          </button>
+
+        {id ? (
+          <>
+            {loader ? (
+              <button
+                type="button"
+                className="w-full bg-blue-600 pointer-events-none text-white py-2 rounded hover:bg-blue-700"
+              >
+                Updating...
+              </button>
+            ) : (
+              <button
+                type="submit"
+                className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700"
+              >
+                Update Employee
+              </button>
+            )}
+          </>
         ) : (
-          <button
-            type="submit"
-            className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700"
-          >
-            Add Employee
-          </button>
+          <>
+            {loader ? (
+              <button
+                type="button"
+                className="w-full bg-blue-600 pointer-events-none text-white py-2 rounded hover:bg-blue-700"
+              >
+                Submitting...
+              </button>
+            ) : (
+              <button
+                type="submit"
+                className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700"
+              >
+                Add Employee
+              </button>
+            )}
+          </>
         )}
       </form>
     </div>
