@@ -1,11 +1,23 @@
-import React, { useEffect, useRef, useState } from "react";
-import { CustomLoading } from "../components/Loading";
+import React, { useContext, useEffect, useRef, useState } from "react";
+import { CustomLoading, SmallCardLoader } from "../components/Loading";
 import { toast } from "react-toastify";
+import { EmployeeContext, EnvContext } from "../../App";
+import { FaTrash } from "react-icons/fa";
+import axios from "axios";
 
-const Generator = ({ generatorLogs, areLogs, generatorId, runningGen }) => {
+const Generator = ({
+  generatorLogs,
+  areLogs,
+  generatorId,
+  runningGen,
+   setGeneratorLogs,
+}) => {
   const [fromDate, setFromDate] = useState("");
   const [toDate, setToDate] = useState("");
+  const { employeeData, token } = useContext(EmployeeContext);
+  const { base_api_url } = useContext(EnvContext);
   const [genLogs, setGenLogs] = useState([]);
+  const [deleteLoader, setDeleteLoader] = useState(false);
   const tableRef = useRef(null);
   const [totalRunningHours, setTotalRunningHours] = useState(0);
   const [liveRunTime, setLiveRunTime] = useState(0);
@@ -112,12 +124,43 @@ const Generator = ({ generatorLogs, areLogs, generatorId, runningGen }) => {
         const hours = Math.floor(liveMin / 60);
         const minutes = Math.floor(liveMin % 60);
         setLiveRunTime(`${hours}h ${minutes}m`);
-      }, 10000);
+      }, 5000);
 
       return () => clearInterval(interval);
     }
   }, [runningGen]);
 
+  // delete generator logs
+  const deleteGeneratorLog = async (genData) => {
+    const isOkay = confirm("Generator log will be deleted, are you sure ?");
+    if (!isOkay) return;
+
+    if (genData.status === "on") {
+      return toast.warning(
+        `Please First Stop the generator ${runningGen.generatorId} before delete the log.`
+      );
+    }
+    try {
+      setDeleteLoader(true);
+      const res = await axios.delete(
+        `${base_api_url}/api/generator/delete/log/${genData._id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (res) {
+        toast.success(res.data.message);
+         setGeneratorLogs(generatorLogs.filter((log) => log._id !== genData._id));
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error("Please try again");
+    } finally {
+      setDeleteLoader(false);
+    }
+  };
 
   // if logs are then render otherwise loader shows
   if (areLogs) {
@@ -141,6 +184,9 @@ const Generator = ({ generatorLogs, areLogs, generatorId, runningGen }) => {
                   <th className="px-4 py-2 border">Status</th>
                   <th className="px-4 py-2 border">First Employee</th>
                   <th className="px-4 py-2 border">Second Employee</th>
+                  {["incharge", "manager"].includes(
+                    employeeData?.designation
+                  ) && <th className="px-4 py-2 border">Delete Logs</th>}
                 </tr>
               </thead>
               <tbody className="text-gray-600">
@@ -160,7 +206,7 @@ const Generator = ({ generatorLogs, areLogs, generatorId, runningGen }) => {
                     </td>
 
                     {/* duration  */}
-                    {log.duration >= 0 || log.duration  ? (
+                    {log.duration >= 0 || log.duration ? (
                       <td className="px-4 py-2 border">
                         {log.duration !== null
                           ? `${
@@ -187,6 +233,19 @@ const Generator = ({ generatorLogs, areLogs, generatorId, runningGen }) => {
                     <td className="px-4 py-2 border">
                       {log.secondEmpName || "—"}
                     </td>
+                    {["incharge", "manager"].includes(
+                      employeeData?.designation
+                    ) && (
+                      <td className="px-4 py-2 border text-red-500 hover:text-red-800 cursor-pointer transition">
+                        <span
+                          onClick={() => deleteGeneratorLog(log)}
+                          className="flex
+                  justify-center"
+                        >
+                          <FaTrash size={18} />
+                        </span>
+                      </td>
+                    )}
                   </tr>
                 ))}
               </tbody>
@@ -275,6 +334,9 @@ const Generator = ({ generatorLogs, areLogs, generatorId, runningGen }) => {
           </button>
         </section>
       </div>
+
+      {/* delete loader component  */}
+      {deleteLoader && <SmallCardLoader title={"Deleting..."} />}
     </>
   );
 };

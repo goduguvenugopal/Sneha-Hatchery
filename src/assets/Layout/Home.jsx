@@ -114,6 +114,7 @@ const Home = ({ loader }) => {
     }
   };
 
+  // filter generator 1 and 2 logs 
   useEffect(() => {
     const results = generatorLogsOne.filter(
       (log) => log.generatorId === generatorId
@@ -218,6 +219,7 @@ const Home = ({ loader }) => {
           areLogs={areLogs}
           generatorId={generatorId}
           runningGen={runningGen}
+           setGeneratorLogs={setGeneratorLogs}
         />
       </div>
 

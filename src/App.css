@@ -1,6 +1,8 @@
 body::-webkit-scrollbar {
   display: none;
 }
+
+
 @media print {
   body * {
     visibility: hidden;
